@@ -83,6 +83,8 @@ class Classifier(pl.LightningModule):
 		v = self.model(hypothesis,lengths_hypothesis)
 		diff = torch.abs(u - v)
 		mul = torch.mul(u,v)
+		print(v.shape)
+
 		concat_emb =  torch.cat((u, v, diff,mul), 1)
 		# print('cponcat',concat_emb.shape)
 		# print(concat_emb.shape)
@@ -125,6 +127,9 @@ class Classifier(pl.LightningModule):
 		# self.log_dict(self.train_metrics, on_step=False, on_epoch=True)
 		return loss
 	def demo_inference(self,prem, hyp):
+		""" Predict the NLI label for the tuple premise, hypothesis. 
+		Returns a tuple of label in int form and text.
+		"""
 		# print(x)
 		# sentences,lengths = x[0],x[1]
 		# print('all len',lengths)
@@ -141,8 +146,30 @@ class Classifier(pl.LightningModule):
 		hypothesis = self.emb_vec(hypothesis)
 		# lengths_premise = torch.tensor(lengths_premise.item())
 		# print(lengths_premise)
-		z = self.forward((premise,hypothesis,lengths_premise,lengths_hypothesis)) 
-		return z  
+		# print(hypothesis.shape)
+		# z = self.forward((premise,hypothesis,lengths_premise,lengths_hypothesis)) 
+		# premise, hypothesis, lengths_premise, lengths_hypothesis
+		# print(premise.shape)
+		# vect = self.emb_vec(premise)
+		# print(vect.shape)
+		# print('premise',premise.shape)
+		# print('hypothesis',hypothesis.shape)
+		u = self.model(premise,lengths_premise)
+		v = self.model(hypothesis,lengths_hypothesis)
+		diff = torch.abs(u - v)
+		mul = torch.mul(u,v)
+		# print(v.shape)
+
+		concat_emb =  torch.cat((u, v, diff,mul), 0)
+		# print('cponcat',concat_emb.shape)
+		# print(concat_emb.shape)
+		linear_class = self.classifier(concat_emb) 
+		soft = nn.Softmax(dim=0)	
+		soft_z = soft(linear_class)
+		pred = torch.argmax(soft_z).item()
+		labels = ['entailment', 'neutral', 'contradiction']
+		confidence = soft_z[pred].item()
+		return pred, labels[pred], confidence
 
 	def training_epoch_end(self, outs):
 		train_acc = self.train_acc.compute()
