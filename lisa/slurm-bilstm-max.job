@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu_shared_course
+#SBATCH --gres=gpu:1
+#SBATCH --job-name=train-atcs
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
+#SBATCH --time=15:00:00
+#SBATCH --mem=32000M
+#SBATCH --output=job_logs/slurm_out_%A.out
+
+module purge
+module load 2019
+module load CUDA
+module load Anaconda3/2018.12
+
+# Your job starts in the directory where you call sbatch
+cd $HOME/ATCS
+
+
+# Activate your environment
+source activate atcs-practical
+
+conda info
+conda list
+
+conda info
+
+srun python train.py --gpus -1 --model bilstm-max --precision 32 --batch 128 --disable_nonlinear

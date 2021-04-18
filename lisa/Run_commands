@@ -1,0 +1,2 @@
+salloc -N1 -p gpu_titanrtx_shared_course -t 10:00:0 --gpus-per-node=titanrtx:1  sbatch lisa/slurm-lstm.job
+(base) lcur0305@login-gpu1:~/ATCS$ salloc -N1 -p gpu_titanrtx_shared_course -t 10:00:0 --gpus-per-node=titanrtx:1  sbatch lisa/slurm-lstm.job

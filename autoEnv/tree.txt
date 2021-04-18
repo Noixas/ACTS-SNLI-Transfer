@@ -1,0 +1,23 @@
+.
+├── autoEnv
+├── bash_scripts
+├── data
+│   └── snli
+├── dev_notebooks
+├── .ipynb_checkpoints
+├── lisa
+├── modules
+├── results_senteval
+├── SentEval
+├── subdata
+│   └── snli
+├── tb_logs
+├── trained_models
+│   ├── awe
+│   ├── bilstm
+│   ├── bilstm-max
+│   └── lstm
+├── .vector_cache
+└── wandb
+
+36 directories
