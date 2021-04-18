@@ -64,4 +64,11 @@ To run the sentEval tests you can run the following command `python .eval.py --m
 
 
 
+## Scores
 
+| Model      | NLI-dev | NLI-test | Transf-micro | Transf-macro |
+|------------|---------|----------|--------------|--------------|
+| AWE        | 0.6173  | 0.6283   | 82.573       | 79.129       |
+| LSTM       | 0.791   | 0.7834   | 77.41        | 78.337       |
+| BILSTM     | 0.7935  | 0.7948   | 83.36        | 82.185       |
+| BILSTM-MAX | 0.834   | 0.8333   | 87.075       | 84.95        |
