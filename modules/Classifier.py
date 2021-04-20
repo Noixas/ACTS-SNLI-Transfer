@@ -130,36 +130,21 @@ class Classifier(pl.LightningModule):
 		""" Predict the NLI label for the tuple premise, hypothesis. 
 		Returns a tuple of label in int form and text.
 		"""
-		# print(x)
-		# sentences,lengths = x[0],x[1]
-		# print('all len',lengths)
+		
 		premise, lengths_premise = prem
 		hypothesis, lengths_hypothesis = hyp
-		# premise,hypothesis = sentences[0],sentences[1]
-		# lengths_premise = lengths[0].reshape(1)
-		# lengths_hypothesis = lengths[1].reshape(1)
-		# # premise = premise[0]
-		# hypothesis = hypothesis[0]
-		# print(premise)
+		
 
 		premise = self.emb_vec(premise)
 		hypothesis = self.emb_vec(hypothesis)
-		# lengths_premise = torch.tensor(lengths_premise.item())
-		# print(lengths_premise)
-		# print(hypothesis.shape)
-		# z = self.forward((premise,hypothesis,lengths_premise,lengths_hypothesis)) 
-		# premise, hypothesis, lengths_premise, lengths_hypothesis
-		# print(premise.shape)
-		# vect = self.emb_vec(premise)
-		# print(vect.shape)
-		# print('premise',premise.shape)
-		# print('hypothesis',hypothesis.shape)
-		u = self.model(premise,lengths_premise)
-		v = self.model(hypothesis,lengths_hypothesis)
+		
+		u = self.model(premise,lengths_premise).squeeze()
+		v = self.model(hypothesis,lengths_hypothesis).squeeze()
 		diff = torch.abs(u - v)
 		mul = torch.mul(u,v)
-		# print(v.shape)
-
+		
+		# print('cponcat',concat_emb.shape)
+		# print(mul.shape)
 		concat_emb =  torch.cat((u, v, diff,mul), 0)
 		# print('cponcat',concat_emb.shape)
 		# print(concat_emb.shape)
@@ -167,9 +152,9 @@ class Classifier(pl.LightningModule):
 		soft = nn.Softmax(dim=0)	
 		soft_z = soft(linear_class)
 		pred = torch.argmax(soft_z).item()
-		labels = ['entailment', 'neutral', 'contradiction']
+		labels = ['entailment', 'contradiction', 'neutral']
 		confidence = soft_z[pred].item()
-		return pred, labels[pred], confidence
+		return pred, labels[pred], confidence, soft_z
 
 	def training_epoch_end(self, outs):
 		train_acc = self.train_acc.compute()

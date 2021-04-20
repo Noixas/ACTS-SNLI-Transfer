@@ -60,7 +60,7 @@ class BILSTM(pl.LightningModule):
         # print(embedding.shape)
 
         embedding = torch.squeeze(
-            torch.cat((h_n[0, :, :], h_n[1, :, :]), dim=-1))  # finally right shape
+            torch.cat((h_n[0, :, :], h_n[1, :, :]), dim=-1))  # finally right shape 4k vector
         # print(embedding.shape)
         return embedding
 
@@ -82,6 +82,7 @@ class BILSTMMaxPool(BILSTM):
         # print('idk',_)
 
         len_batch = x.shape[0]
+        #batch,word amount, 2 layers (bilstm), emb size
         h = h.view(len_batch, -1, 2, self.hidden_dim)
 
         # print(h_n.shape)
@@ -95,19 +96,19 @@ class BILSTMMaxPool(BILSTM):
 # class ModelBase(pl.LightningModule):
 # 	def __init__(self):
 # 		super().__init__()
-	# def training_step(self, train_batch, batch_idx):
-	# 	x, y = train_batch
-	# 	x = x.view(x.size(0), -1)
-	# 	z = self.encoder(x)    
-	# 	x_hat = self.decoder(z)
-	# 	loss = F.mse_loss(x_hat, x)
-	# 	self.log('train_loss', loss)
-	# 	return loss
+        # def training_step(self, train_batch, batch_idx):
+        # 	x, y = train_batch
+        # 	x = x.view(x.size(0), -1)
+        # 	z = self.encoder(x)
+        # 	x_hat = self.decoder(z)
+        # 	loss = F.mse_loss(x_hat, x)
+        # 	self.log('train_loss', loss)
+        # 	return loss
 
-	# def validation_step(self, val_batch, batch_idx):
-	# 	x, y = val_batch
-	# 	x = x.view(x.size(0), -1)
-	# 	z = self.encoder(x)
-	# 	x_hat = self.decoder(z)
-	# 	loss = F.mse_loss(x_hat, x)
-	# 	self.log('val_loss', loss)
+        # def validation_step(self, val_batch, batch_idx):
+        # 	x, y = val_batch
+        # 	x = x.view(x.size(0), -1)
+        # 	z = self.encoder(x)
+        # 	x_hat = self.decoder(z)
+        # 	loss = F.mse_loss(x_hat, x)
+        # 	self.log('val_loss', loss)
